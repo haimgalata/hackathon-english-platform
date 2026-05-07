@@ -20,15 +20,15 @@ export default function ProgressRing({ percent, level, size = 96 }: ProgressRing
   }, [percent]);
 
   return (
-    <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
+    <div className="relative inline-flex items-center justify-center flex-shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="#e2e8f0"
-          strokeWidth="8"
+          stroke="rgba(255,255,255,0.07)"
+          strokeWidth="7"
         />
         <circle
           cx={size / 2}
@@ -36,7 +36,7 @@ export default function ProgressRing({ percent, level, size = 96 }: ProgressRing
           r={radius}
           fill="none"
           stroke="url(#ringGrad)"
-          strokeWidth="8"
+          strokeWidth="7"
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -44,14 +44,14 @@ export default function ProgressRing({ percent, level, size = 96 }: ProgressRing
         />
         <defs>
           <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#818CF8" />
-            <stop offset="100%" stopColor="#a855f7" />
+            <stop offset="0%" stopColor="#00d4ff" />
+            <stop offset="100%" stopColor="#e040fb" />
           </linearGradient>
         </defs>
       </svg>
       <div className="absolute flex flex-col items-center">
-        <span className="text-xs text-slate-500 font-medium leading-none">LVL</span>
-        <span className="text-2xl font-extrabold text-indigo-600 leading-tight">{level}</span>
+        <span className="text-[7px] text-white/35 font-bold leading-none tracking-widest">LEVEL</span>
+        <span className="text-2xl font-extrabold text-[#00d4ff] leading-tight">{level}</span>
       </div>
     </div>
   );

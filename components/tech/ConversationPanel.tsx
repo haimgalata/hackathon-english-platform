@@ -11,6 +11,17 @@ interface ConversationPanelProps {
   interimText?: string;
 }
 
+function TechyBadge() {
+  return (
+    <div
+      className="w-7 h-7 rounded-full flex items-center justify-center text-xs mr-2 mt-1 flex-shrink-0 font-bold"
+      style={{ background: 'linear-gradient(135deg, #00d4ff22, #e040fb22)', border: '1px solid rgba(0,212,255,0.3)', color: '#00d4ff' }}
+    >
+      T
+    </div>
+  );
+}
+
 export default function ConversationPanel({ messages, isLoading, interimText }: ConversationPanelProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -22,15 +33,15 @@ export default function ConversationPanel({ messages, isLoading, interimText }: 
     return (
       <div className="flex-1 flex items-center justify-center text-center p-6">
         <div>
-          <p className="text-slate-400 text-sm">Tap the mic button below to start talking with Techy!</p>
-          <p className="text-slate-300 text-xs mt-1">Speak in English and earn points 🎯</p>
+          <p className="text-white/30 text-sm">Tap the mic button to start talking with Techy</p>
+          <p className="text-white/20 text-xs mt-1 tracking-wide">Speak in English and earn points</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+    <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 scrollbar-hide">
       <AnimatePresence initial={false}>
         {messages.map((msg, i) => (
           <motion.div
@@ -40,17 +51,18 @@ export default function ConversationPanel({ messages, isLoading, interimText }: 
             transition={{ duration: 0.25 }}
             className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
           >
-            {msg.role === 'assistant' && (
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-xs mr-2 mt-1 flex-shrink-0">
-                🤖
-              </div>
-            )}
+            {msg.role === 'assistant' && <TechyBadge />}
             <div
               className={`max-w-[78%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
                 msg.role === 'user'
-                  ? 'bg-indigo-500 text-white rounded-br-sm'
-                  : 'bg-white shadow-sm text-slate-700 rounded-bl-sm'
+                  ? 'text-white rounded-br-sm'
+                  : 'text-white/85 rounded-bl-sm'
               }`}
+              style={
+                msg.role === 'user'
+                  ? { background: 'rgba(0,212,255,0.18)', border: '1px solid rgba(0,212,255,0.2)' }
+                  : { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }
+              }
             >
               {msg.content}
             </div>
@@ -61,7 +73,10 @@ export default function ConversationPanel({ messages, isLoading, interimText }: 
       {/* Interim / live transcript */}
       {interimText && (
         <div className="flex justify-end">
-          <div className="max-w-[78%] px-4 py-2.5 rounded-2xl rounded-br-sm text-sm bg-indigo-200 text-indigo-700 italic">
+          <div
+            className="max-w-[78%] px-4 py-2.5 rounded-2xl rounded-br-sm text-sm text-[#00d4ff]/70 italic"
+            style={{ background: 'rgba(0,212,255,0.06)', border: '1px solid rgba(0,212,255,0.15)' }}
+          >
             {interimText}
           </div>
         </div>
@@ -70,10 +85,11 @@ export default function ConversationPanel({ messages, isLoading, interimText }: 
       {/* Loading dots while AI thinks */}
       {isLoading && (
         <div className="flex justify-start items-center">
-          <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-xs mr-2 flex-shrink-0">
-            🤖
-          </div>
-          <div className="bg-white shadow-sm rounded-2xl rounded-bl-sm">
+          <TechyBadge />
+          <div
+            className="rounded-2xl rounded-bl-sm"
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
+          >
             <LoadingDots />
           </div>
         </div>

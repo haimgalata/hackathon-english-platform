@@ -171,23 +171,23 @@ export default function TechPage() {
   ]);
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 via-indigo-50 to-purple-50 max-w-lg mx-auto">
+    <div className="flex flex-col h-screen bg-[#0f1117] max-w-lg mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/60 bg-white/50 backdrop-blur-sm">
-        <Link href="/dashboard" className="text-indigo-500 text-sm font-medium flex items-center gap-1">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-white/[0.06] bg-[#0f1117]">
+        <Link href="/dashboard" className="text-[#00d4ff] text-sm font-medium flex items-center gap-1 opacity-70 hover:opacity-100 transition-opacity">
           ← Dashboard
         </Link>
-        <h1 className="text-base font-bold text-slate-700">Techy — AI Tutor</h1>
+        <h1 className="text-sm font-bold text-white tracking-[0.2em]">TECHY</h1>
         {student && (
-          <span className="text-xs text-slate-500 font-medium">⭐ {student.score}</span>
+          <span className="text-xs text-white/40 font-medium">{student.score} pts</span>
         )}
       </div>
 
       {/* Browser warning */}
       {showBrowserWarning && (
-        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 flex items-center justify-between">
-          <p className="text-xs text-amber-700">For voice input, use Chrome or Edge.</p>
-          <button onClick={() => setShowBrowserWarning(false)} className="text-amber-500 text-xs ml-2">✕</button>
+        <div className="bg-amber-900/30 border-b border-amber-500/20 px-4 py-2 flex items-center justify-between">
+          <p className="text-xs text-amber-400">For voice input, use Chrome or Edge.</p>
+          <button onClick={() => setShowBrowserWarning(false)} className="text-amber-400/60 text-xs ml-2">✕</button>
         </div>
       )}
 
@@ -202,7 +202,7 @@ export default function TechPage() {
       </div>
 
       {/* Conversation */}
-      <div className="flex-1 flex flex-col overflow-hidden bg-slate-50/70 rounded-t-3xl mx-2 shadow-inner">
+      <div className="flex-1 flex flex-col overflow-hidden rounded-t-3xl mx-2" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderBottom: 'none' }}>
         <ConversationPanel
           messages={messages}
           isLoading={isLoading}
@@ -217,7 +217,7 @@ export default function TechPage() {
         />
 
         {/* Voice input */}
-        <div className="flex justify-center py-5 border-t border-slate-200/70 bg-white/60">
+        <div className="flex justify-center py-5 border-t border-white/[0.06]">
           <VoiceButton
             state={buttonState}
             onPress={handleVoicePress}

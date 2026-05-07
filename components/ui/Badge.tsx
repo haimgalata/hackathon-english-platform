@@ -1,10 +1,10 @@
 type BadgeVariant = 'score' | 'level' | 'new' | 'default';
 
 const VARIANT_CLASSES: Record<BadgeVariant, string> = {
-  score:   'bg-blue-100 text-blue-700',
-  level:   'bg-purple-100 text-purple-700',
-  new:     'bg-green-100 text-green-700',
-  default: 'bg-slate-100 text-slate-700',
+  score:   'bg-[#00d4ff]/[0.1] text-[#00d4ff] border border-[#00d4ff]/20',
+  level:   'bg-[#e040fb]/[0.1] text-[#e040fb] border border-[#e040fb]/20',
+  new:     'bg-emerald-500/[0.1] text-emerald-400 border border-emerald-500/20',
+  default: 'bg-white/[0.06] text-white/60 border border-white/[0.1]',
 };
 
 interface BadgeProps {

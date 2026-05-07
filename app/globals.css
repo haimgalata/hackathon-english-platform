@@ -3,15 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #f8fafc;
+  --foreground: #1e293b;
 }
 
 body {
@@ -25,3 +18,31 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Avatar animations */
+@keyframes breathe {
+  0%, 100% { transform: translateY(0px); }
+  45%       { transform: translateY(-7px); }
+  55%       { transform: translateY(-9px); }
+}
+
+@keyframes pulse-ring {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.06); }
+}
+
+@keyframes speakBob {
+  0%, 100% { transform: translateY(0px); }
+  30%       { transform: translateY(-5px); }
+  70%       { transform: translateY(2px); }
+}
+
+@keyframes headSway {
+  0%, 100% { transform: rotate(-0.8deg) translateY(-2px); }
+  50%       { transform: rotate(0.8deg)  translateY(-2px); }
+}
+
+.avatar-idle      { animation: breathe 4s ease-in-out infinite; }
+.avatar-listening { animation: headSway 1.8s ease-in-out infinite; }
+.avatar-thinking  { animation: breathe 4s ease-in-out infinite; }
+.avatar-speaking  { animation: speakBob 0.45s ease-in-out infinite; }

@@ -6,6 +6,7 @@ import type { AvatarState } from '@/types';
 
 interface TechyAvatarProps {
   state: AvatarState;
+  hideLabel?: boolean;
 }
 
 const STATE_GLOW: Record<AvatarState, { ring: string; bg: string }> = {
@@ -45,7 +46,7 @@ const BROW_Y: Record<AvatarState, number> = {
   speaking:  -1,
 };
 
-export default function TechyAvatar({ state }: TechyAvatarProps) {
+export default function TechyAvatar({ state, hideLabel = false }: TechyAvatarProps) {
   const [isBlinking, setIsBlinking] = useState(false);
   const [mouthFrame, setMouthFrame] = useState(0);
   const glow = STATE_GLOW[state];
@@ -303,24 +304,26 @@ export default function TechyAvatar({ state }: TechyAvatarProps) {
       </div>
 
       {/* State label */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={state}
-          initial={{ opacity: 0, y: 4 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -4 }}
-          transition={{ duration: 0.2 }}
-          className="flex items-center gap-1.5"
-        >
+      {!hideLabel && (
+        <AnimatePresence mode="wait">
           <motion.div
-            className="w-2 h-2 rounded-full"
-            style={{ backgroundColor: glow.ring }}
-            animate={{ scale: state === 'speaking' ? [1, 1.4, 1] : 1 }}
-            transition={{ duration: 0.4, repeat: Infinity }}
-          />
-          <span className="text-sm font-medium text-slate-500">{STATE_LABELS[state]}</span>
-        </motion.div>
-      </AnimatePresence>
+            key={state}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.2 }}
+            className="flex items-center gap-1.5"
+          >
+            <motion.div
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: glow.ring }}
+              animate={{ scale: state === 'speaking' ? [1, 1.4, 1] : 1 }}
+              transition={{ duration: 0.4, repeat: Infinity }}
+            />
+            <span className="text-sm font-medium text-slate-500">{STATE_LABELS[state]}</span>
+          </motion.div>
+        </AnimatePresence>
+      )}
     </div>
   );
 }

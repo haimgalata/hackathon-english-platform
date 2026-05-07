@@ -139,8 +139,8 @@ export default function TechPage() {
         setIsLoading(false);
         setAvatarState('speaking');
 
-        // Award XP and update local state
-        if (student && feedback?.scoreEarned > 0) {
+        // Award XP only for meaningful responses (score >= 5 means partial effort or better)
+        if (student && feedback?.scoreEarned >= 5) {
           fetch(`/api/students/${student.id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },

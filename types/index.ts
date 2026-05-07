@@ -7,6 +7,7 @@ export interface Student {
   xp: number;
   created_at: string;
   last_active_at: string;
+  session_count?: number;
 }
 
 export interface Session {

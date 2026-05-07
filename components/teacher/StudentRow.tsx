@@ -52,6 +52,9 @@ export default function StudentRow({ student }: StudentRowProps) {
           <span className="text-sm font-bold text-white/80">{student.score}</span>
         </div>
       </td>
+      <td className="px-4 py-3 text-sm font-semibold text-white/70">
+        {student.session_count ?? 0}
+      </td>
       <td className="px-4 py-3">
         <div className="w-full rounded-full h-1.5 max-w-[80px]" style={{ background: 'rgba(255,255,255,0.08)' }}>
           <div

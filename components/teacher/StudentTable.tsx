@@ -74,7 +74,7 @@ export default function StudentTable() {
         <table className="w-full text-left">
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(255,255,255,0.03)' }}>
-              {['Student', 'Level', 'Score', 'XP Progress', 'Last Active'].map((h) => (
+              {['Student', 'Level', 'Score', 'Sessions', 'XP Progress', 'Last Active'].map((h) => (
                 <th key={h} className="px-4 py-3 text-[10px] font-semibold text-white/35 uppercase tracking-widest">{h}</th>
               ))}
             </tr>

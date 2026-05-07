@@ -5,12 +5,21 @@ import { xpToLevel } from '@/lib/session';
 export async function GET(_req: NextRequest, { params }: { params: { id: string } }) {
   const { data, error } = await supabase
     .from('students')
-    .select('*, sessions(*)')
+    .select('*, sessions(count)')
     .eq('id', params.id)
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 404 });
-  return NextResponse.json(data);
+
+  const student = {
+    ...data,
+    session_count: Array.isArray(data.sessions) && data.sessions.length > 0
+      ? (data.sessions[0] as { count: number }).count
+      : 0,
+    sessions: undefined,
+  };
+
+  return NextResponse.json(student);
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {

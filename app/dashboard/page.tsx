@@ -11,7 +11,6 @@ import ProgressRing from '@/components/dashboard/ProgressRing';
 /* ── helpers ── */
 const RANK_TITLES = ['Newcomer', 'Explorer', 'Tech Cadet', 'Developer', 'Engineer', 'Tech Master'];
 const getRank = (level: number) => RANK_TITLES[Math.min(level, RANK_TITLES.length - 1)];
-const getSessions = (score: number) => Math.max(0, Math.floor(score / 6));
 
 /* ── fade-up animation preset ── */
 const fadeUp = (delay = 0) => ({
@@ -600,7 +599,7 @@ function ModeCard({
         {/* Footer row */}
         <div className="flex items-center justify-between relative z-10">
           <span className="text-xs font-semibold" style={{ color: accentColor + '90' }}>
-            {isTech ? 'Continue learning →' : 'Coming soon →'}
+            {'Play now →'}
           </span>
           <div
             className="w-8 h-8 rounded-xl flex items-center justify-center"
@@ -633,7 +632,7 @@ export default function DashboardPage() {
   }, []);
 
   const percent = student ? xpProgressPercent(student.xp) : 0;
-  const sessions = student ? getSessions(student.score) : 0;
+  const sessions = student ? (student.session_count ?? 0) : 0;
 
   return (
     <div className="min-h-screen bg-[#0f1117] relative overflow-x-hidden">
@@ -687,18 +686,11 @@ export default function DashboardPage() {
         </div>
 
         {/* ── Mode Cards ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 gap-5">
           <ModeCard
-            href="/tech"
-            label="TECH"
-            description="AI conversation practice with Techy — improve your tech English in real time"
-            accentColor="#00d4ff"
-            recommended
-          />
-          <ModeCard
-            href="/practice"
+            href="/game"
             label="PRACTICE"
-            description="Vocabulary games and word challenges — coming soon"
+            description="Vocabulary games and word challenges"
             accentColor="#e040fb"
           />
         </div>

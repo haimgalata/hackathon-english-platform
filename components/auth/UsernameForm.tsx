@@ -6,7 +6,7 @@ import { saveStudentSession } from '@/lib/session';
 
 export default function UsernameForm() {
   const router = useRouter();
-  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -15,13 +15,9 @@ export default function UsernameForm() {
     e.preventDefault();
     setError('');
 
-    const trimmed = username.trim();
-    if (trimmed.length < 3 || trimmed.length > 20) {
-      setError('Username must be 3–20 characters.');
-      return;
-    }
-    if (!/^[a-zA-Z0-9_]+$/.test(trimmed)) {
-      setError('Only letters, numbers, and underscores allowed.');
+    const trimmed = password.trim();
+    if (trimmed.length < 3) {
+      setError('Password must be at least 3 characters.');
       return;
     }
 
@@ -60,21 +56,20 @@ export default function UsernameForm() {
           type="text"
           value={displayName}
           onChange={(e) => setDisplayName(e.target.value)}
-          placeholder="e.g. Alex"
+          placeholder=""
           className={inputClass}
         />
       </div>
 
       <div>
         <label className="block text-xs font-semibold text-white/50 mb-2 tracking-wide uppercase">
-          Username{' '}
-          <span className="text-white/25 normal-case font-normal">(3–20 chars, letters / numbers / _)</span>
+          Password
         </label>
         <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="e.g. alex_coder"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder=""
           required
           className={inputClass}
         />

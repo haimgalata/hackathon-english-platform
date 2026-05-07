@@ -4,11 +4,20 @@ import { supabase } from '@/lib/supabase';
 export async function GET() {
   const { data, error } = await supabase
     .from('students')
-    .select('*')
+    .select('*, sessions(count)')
     .order('score', { ascending: false });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data);
+
+  const students = (data ?? []).map((s: Record<string, unknown>) => ({
+    ...s,
+    session_count: Array.isArray(s.sessions) && s.sessions.length > 0
+      ? (s.sessions[0] as { count: number }).count
+      : 0,
+    sessions: undefined,
+  }));
+
+  return NextResponse.json(students);
 }
 
 export async function POST(req: NextRequest) {

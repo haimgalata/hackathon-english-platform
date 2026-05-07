@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import * as Phaser from 'phaser'
 import { AnswerEnemy } from '../objects/AnswerEnemy'
 import { GameQuestion } from '../data/vocabulary'
 import { GAME_WIDTH, GAME_HEIGHT } from '../config'

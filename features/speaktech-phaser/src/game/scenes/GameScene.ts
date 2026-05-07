@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import * as Phaser from 'phaser'
 import { GAME_WIDTH, GAME_HEIGHT }  from '../config'
 import { createLaserTexture }       from '../objects/PlayerLaser'
 import { LaserSystem }              from '../systems/LaserSystem'

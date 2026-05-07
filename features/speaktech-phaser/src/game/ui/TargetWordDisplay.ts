@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import * as Phaser from 'phaser'
 import { GameQuestion, isSentenceQuestion } from '../data/vocabulary'
 import { GameMode } from '../systems/ModeManager'
 import { GAME_WIDTH } from '../config'

@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import * as Phaser from 'phaser'
 import { GameStats } from '../systems/ScoreManager'
 import { GAME_WIDTH } from '../config'
 

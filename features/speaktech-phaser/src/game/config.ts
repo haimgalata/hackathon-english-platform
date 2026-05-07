@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import * as Phaser from 'phaser'
 import { StartScene }      from './scenes/StartScene'
 import { GameScene }       from './scenes/GameScene'
 import { TransitionScene } from './scenes/TransitionScene'

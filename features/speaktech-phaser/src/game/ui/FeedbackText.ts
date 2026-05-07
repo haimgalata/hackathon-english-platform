@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import * as Phaser from 'phaser'
 
 /**
  * Spawns a floating arcade-style feedback label that rises and fades out.

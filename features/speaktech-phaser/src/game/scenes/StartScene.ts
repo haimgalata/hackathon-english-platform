@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import * as Phaser from 'phaser'
 import { GAME_WIDTH, GAME_HEIGHT } from '../config'
 import { WORD_BANK } from '../data/vocabulary'
 import { GameMode } from '../systems/ModeManager'

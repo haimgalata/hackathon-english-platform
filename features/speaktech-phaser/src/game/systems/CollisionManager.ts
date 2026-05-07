@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import * as Phaser from 'phaser'
 import { LaserSystem }   from './LaserSystem'
 import { AnswerSpawner } from './AnswerSpawner'
 import { ScoreManager }  from './ScoreManager'
@@ -86,8 +86,8 @@ export class CollisionManager {
 
   /** Remove stale entries — enemies that were destroyed by the spawner */
   private cleanHitSet() {
-    for (const e of this.hitSet) {
+    this.hitSet.forEach((e) => {
       if (!this.spawner.enemies.includes(e)) this.hitSet.delete(e)
-    }
+    })
   }
 }

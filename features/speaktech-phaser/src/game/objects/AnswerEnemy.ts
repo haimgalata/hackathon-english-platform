@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import * as Phaser from 'phaser'
 
 // ─── Visual constants ─────────────────────────────────────────────────────────
 const SHIP_COLOR   = 0x1a0033

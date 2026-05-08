@@ -39,6 +39,14 @@ export const SCENARIOS: Record<ScenarioKey, ScenarioConfig> = {
   },
 };
 
+/** System prompt for the first assistant message when the student has not spoken yet. */
+export function buildOpeningSystemPrompt(scenarioKey: ScenarioKey): string {
+  return `${buildSystemPrompt(scenarioKey)}
+
+OPENING TURN: There are no messages yet. You speak first as Techy. One short greeting in character for this scenario, plus ONE simple question (still max 1–2 sentences, under 40 words).
+For this turn ONLY, set "feedback" to exactly: {"corrections":[],"suggestions":[],"scoreEarned":0}.`;
+}
+
 export function buildSystemPrompt(scenarioKey: ScenarioKey): string {
   const scenario = SCENARIOS[scenarioKey];
   return `You are Techy, a fun AI buddy who helps 14-year-old middle school students practice English and learn basic tech words.

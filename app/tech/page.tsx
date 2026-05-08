@@ -23,6 +23,7 @@ export default function TechPage() {
   const [buttonState, setButtonState] = useState<ButtonState>('idle');
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
   const [currentFeedback, setCurrentFeedback] = useState<Feedback | null>(null);
   const [lastScore, setLastScore] = useState<number | undefined>(undefined);
   const [scenario, setScenario] = useState<ScenarioKey>('interview');
@@ -68,8 +69,73 @@ export default function TechPage() {
     setMessages([]);
     setSessionId(null);
     setAvatarState('idle');
+    setCurrentFeedback(null);
+    setLastScore(undefined);
     stopTTS();
   }, [stopTTS]);
+
+  // After a scenario is selected, Techy speaks first (once session is ready).
+  useEffect(() => {
+    if (!student || !sessionId) return;
+
+    const ac = new AbortController();
+
+    (async () => {
+      setIsOpening(true);
+      setAvatarState('thinking');
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            studentId: student.id,
+            sessionId,
+            scenario,
+            opening: true,
+            history: [],
+          }),
+          signal: ac.signal,
+        });
+
+        if (ac.signal.aborted) return;
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          const detail = (errData as { detail?: string }).detail ?? '';
+          if (detail.includes('quota') || detail.includes('429')) {
+            throw new Error('QUOTA');
+          }
+          throw new Error('API error');
+        }
+
+        const { reply, feedback } = await res.json();
+        if (ac.signal.aborted) return;
+
+        setMessages([{ role: 'assistant', content: reply, feedback }]);
+        setAvatarState('speaking');
+        speak(reply, () => {
+          if (!ac.signal.aborted) setAvatarState('idle');
+        });
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
+        if (ac.signal.aborted) return;
+        setAvatarState('idle');
+        const isQuota = err instanceof Error && err.message === 'QUOTA';
+        const errorMsg = isQuota
+          ? '⚠️ OpenAI quota exceeded. Please add credits at platform.openai.com/billing and try again.'
+          : "Hi! I'm having trouble starting — tap the mic when you're ready.";
+        setMessages([{ role: 'assistant', content: errorMsg }]);
+      } finally {
+        if (!ac.signal.aborted) setIsOpening(false);
+      }
+    })();
+
+    return () => {
+      ac.abort();
+      stopTTS();
+      setIsOpening(false);
+    };
+  }, [student, sessionId, scenario, speak, stopTTS]);
 
   const handleVoicePress = useCallback(async () => {
     if (!isSupported) {
@@ -205,7 +271,7 @@ export default function TechPage() {
       <div className="flex-1 flex flex-col overflow-hidden rounded-t-3xl mx-2" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)', borderBottom: 'none' }}>
         <ConversationPanel
           messages={messages}
-          isLoading={isLoading}
+          isLoading={isLoading || isOpening}
           interimText={interimText}
         />
 
@@ -221,7 +287,7 @@ export default function TechPage() {
           <VoiceButton
             state={buttonState}
             onPress={handleVoicePress}
-            disabled={isLoading}
+            disabled={isLoading || isOpening}
           />
         </div>
       </div>

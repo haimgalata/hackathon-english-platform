@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\USER\\\\Desktop\\\\hackathon-project\\\\hackathon-english-platform\\\\app\" -Recurse -Force | Select-Object FullName | Sort-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"C:\\\\Users\\\\USER\\\\Desktop\\\\hackathon-project\\\\hackathon-english-platform\\\\\", \"\"\\) })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\USER\\\\Desktop\\\\hackathon-project\\\\hackathon-english-platform\\\\components\" -Recurse -Force | Where-Object { -not $_.PSIsContainer } | Select-Object FullName | Sort-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"C:\\\\Users\\\\USER\\\\Desktop\\\\hackathon-project\\\\hackathon-english-platform\\\\\", \"\"\\) })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\USER\\\\Desktop\\\\hackathon-project\\\\hackathon-english-platform\\\\src\" -Recurse -Force | Where-Object { -not $_.PSIsContainer } | Select-Object FullName | Sort-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"C:\\\\Users\\\\USER\\\\Desktop\\\\hackathon-project\\\\hackathon-english-platform\\\\\", \"\"\\) })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\USER\\\\Desktop\\\\hackathon-project\\\\hackathon-english-platform\\\\server\" -Recurse -Force | Where-Object { -not $_.PSIsContainer } | Select-Object FullName | Sort-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"C:\\\\Users\\\\USER\\\\Desktop\\\\hackathon-project\\\\hackathon-english-platform\\\\\", \"\"\\) })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\USER\\\\Desktop\\\\hackathon-project\\\\hackathon-english-platform\\\\hooks\" -Recurse -Force | Where-Object { -not $_.PSIsContainer } | Select-Object FullName | Sort-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"C:\\\\Users\\\\USER\\\\Desktop\\\\hackathon-project\\\\hackathon-english-platform\\\\\", \"\"\\) })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\USER\\\\Desktop\\\\hackathon-project\\\\hackathon-english-platform\\\\prisma\" -Recurse -Force | Where-Object { -not $_.PSIsContainer } | Select-Object FullName | Sort-Object FullName | ForEach-Object { $_.FullName.Replace\\(\"C:\\\\Users\\\\USER\\\\Desktop\\\\hackathon-project\\\\hackathon-english-platform\\\\\", \"\"\\) })",
+      "Bash(python skills/ui-ux-pro-max/scripts/search.py \"education learning english middle school students gamification dark\" --design-system -p \"SpeakTech\" -f markdown)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"education learning english middle school students gamification dark\" --design-system -p \"SpeakTech\" -f markdown)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"AI chat avatar conversation dark gamification teen edtech SaaS\" --design-system -p \"SpeakTech\" -f markdown)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"glassmorphism dark neon gradient\" --domain style -f markdown)",
+      "Bash(python .claude/skills/ui-ux-pro-max/scripts/search.py \"gamification streak progress XP badge\" --domain ux -f markdown)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npx next *)",
+      "Bash(rm -rf src/pages)",
+      "Bash(rm -rf .next)"
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+
+:root {
+  --accent-from: #38bdf8;
+  --accent-to: #a78bfa;
+  --surface-glass: rgba(24, 24, 27, 0.65);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: #09090b;
+  color: #fafafa;
+}
+
+@keyframes tl-bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  40% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.tl-dot {
+  animation: tl-bounce 1.2s ease-in-out infinite;
+}
+.tl-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.tl-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}

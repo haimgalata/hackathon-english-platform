@@ -6,6 +6,9 @@
 .pnp.js
 .yarn/install-state.gz
 
+# nested package (optional Vite app under features/)
+features/speaktech-phaser/node_modules
+
 # testing
 /coverage
 
@@ -25,7 +28,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
+# local env (never commit secrets)
+.env
 .env*.local
 
 # vercel
@@ -33,4 +37,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+
+# optional Vite build output (features/speaktech-phaser)
+features/speaktech-phaser/dist

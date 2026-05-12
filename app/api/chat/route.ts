@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { openai } from '@/lib/openai';
-import { supabase } from '@/lib/supabase';
+import { createGroqClient, GROQ_CHAT_MODEL } from '@/lib/groq';
+import { getDb } from '@/lib/mongodb';
+import { isScenarioKey } from '@/lib/mongoSerializers';
 import { buildSystemPrompt, buildOpeningSystemPrompt } from '@/lib/scenarios';
 import type { ScenarioKey, Feedback } from '@/types';
 
@@ -16,11 +17,26 @@ interface ChatRequestBody {
   opening?: boolean;
 }
 
-export async function POST(req: NextRequest) {
-  const body: ChatRequestBody = await req.json();
-  const { studentId, sessionId, message, scenario, history, opening } = body;
+async function readJsonBody(req: NextRequest): Promise<ChatRequestBody | null> {
+  const text = await req.text();
+  if (!text.trim()) return null;
+  try {
+    return JSON.parse(text) as ChatRequestBody;
+  } catch {
+    return null;
+  }
+}
 
-  if (!scenario) {
+export async function POST(req: NextRequest) {
+  const body = await readJsonBody(req);
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
+
+  const { studentId, sessionId, message, scenario, opening } = body;
+  const history = Array.isArray(body.history) ? body.history : [];
+
+  if (!isScenarioKey(scenario)) {
     return NextResponse.json({ error: 'scenario is required' }, { status: 400 });
   }
 
@@ -39,9 +55,21 @@ export async function POST(req: NextRequest) {
         { role: 'user', content: message!.trim() },
       ];
 
+  let groq;
   try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+    groq = createGroqClient();
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    console.error('Groq config error:', msg);
+    return NextResponse.json(
+      { error: 'AI service is not configured.', detail: msg },
+      { status: 503 }
+    );
+  }
+
+  try {
+    const completion = await groq.chat.completions.create({
+      model: GROQ_CHAT_MODEL,
       messages,
       response_format: { type: 'json_object' },
       temperature: 0.7,
@@ -62,45 +90,71 @@ export async function POST(req: NextRequest) {
 
     const { reply, feedback } = parsed;
 
-    // Persist messages to DB (non-blocking — don't await)
     if (studentId && sessionId) {
-      if (opening) {
-        supabase
-          .from('messages')
-          .insert({
-            session_id: sessionId,
-            role: 'assistant',
-            content: reply,
-            feedback,
-          })
-          .then(
-            () => {},
-            () => {}
-          );
-      } else {
-        Promise.all([
-          supabase.from('messages').insert({
-            session_id: sessionId,
-            role: 'user',
-            content: message!.trim(),
-          }),
-          supabase.from('messages').insert({
-            session_id: sessionId,
-            role: 'assistant',
-            content: reply,
-            feedback,
-          }),
-        ]).catch(() => {});
-      }
+      void getDb()
+        .then(async (db) => {
+          const coll = db.collection('messages');
+          const created_at = new Date();
+          if (opening) {
+            await coll.insertOne({
+              session_id: sessionId,
+              role: 'assistant',
+              content: reply,
+              feedback,
+              created_at,
+            });
+          } else {
+            await coll.insertMany([
+              {
+                session_id: sessionId,
+                role: 'user',
+                content: message!.trim(),
+                created_at,
+              },
+              {
+                session_id: sessionId,
+                role: 'assistant',
+                content: reply,
+                feedback,
+                created_at,
+              },
+            ]);
+          }
+        })
+        .catch(() => {});
     }
 
     return NextResponse.json({ reply, feedback });
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
-    console.error('OpenAI error:', msg);
+    console.error('Groq chat error:', msg);
+    const lower = msg.toLowerCase();
+    const isInvalidKey =
+      lower.includes('401') &&
+      (lower.includes('invalid api key') ||
+        lower.includes('invalid_api_key') ||
+        lower.includes('"code":"invalid_api_key"'));
+    if (isInvalidKey) {
+      return NextResponse.json(
+        {
+          error:
+            'Groq API key is missing or invalid. Create a key at console.groq.com/keys and set GROQ_API_KEY in .env (no quotes or spaces). Restart the dev server after saving.',
+          detail: msg,
+        },
+        { status: 401 }
+      );
+    }
+    const isTimeout =
+      lower.includes('timeout') || lower.includes('timed out') || lower.includes('etimedout');
+    const status = isTimeout ? 504 : 503;
     return NextResponse.json(
-      { error: 'AI service unavailable. Please try again.', detail: msg },
-      { status: 503 }
+      {
+        error: isTimeout
+          ? 'AI request timed out. Please try again.'
+          : 'AI service unavailable. Please try again.',
+        detail: msg,
+      },
+      { status }
     );
   }
 }

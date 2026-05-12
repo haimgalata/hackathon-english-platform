@@ -1,5 +1,5 @@
 {
-  "name": "speaktech1",
+  "name": "speaktech",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,8 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.105.3",
     "framer-motion": "^12.38.0",
+    "groq-sdk": "^1.2.0",
+    "mongodb": "^7.2.0",
     "next": "14.2.35",
     "openai": "^6.36.0",
     "phaser": "^3.90.0",

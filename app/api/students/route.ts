@@ -1,59 +1,115 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getDb } from '@/lib/mongodb';
+import { studentDefaults, toStudentApi } from '@/lib/mongoSerializers';
+
+async function readJsonObject(req: NextRequest): Promise<Record<string, unknown>> {
+  const text = await req.text();
+  if (!text.trim()) {
+    throw new Error('EMPTY_BODY');
+  }
+  try {
+    const v = JSON.parse(text) as unknown;
+    if (typeof v !== 'object' || v === null || Array.isArray(v)) {
+      throw new Error('INVALID_BODY');
+    }
+    return v as Record<string, unknown>;
+  } catch {
+    throw new Error('INVALID_JSON');
+  }
+}
 
 export async function GET() {
-  const { data, error } = await supabase
-    .from('students')
-    .select('*, sessions(count)')
-    .order('score', { ascending: false });
+  try {
+    const db = await getDb();
+    const rows = await db
+      .collection('students')
+      .aggregate([
+        { $sort: { score: -1 } },
+        {
+          $lookup: {
+            from: 'chat_sessions',
+            let: { sid: { $toString: '$_id' } },
+            pipeline: [
+              { $match: { $expr: { $eq: ['$student_id', '$$sid'] } } },
+              { $count: 'c' },
+            ],
+            as: '_sc',
+          },
+        },
+        {
+          $set: {
+            session_count: {
+              $ifNull: [{ $arrayElemAt: ['$_sc.c', 0] }, 0],
+            },
+          },
+        },
+        { $project: { _sc: 0 } },
+      ])
+      .toArray();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    const students = rows
+      .map((doc) => toStudentApi(doc))
+      .filter((s): s is NonNullable<typeof s> => s != null);
 
-  const students = (data ?? []).map((s: Record<string, unknown>) => ({
-    ...s,
-    session_count: Array.isArray(s.sessions) && s.sessions.length > 0
-      ? (s.sessions[0] as { count: number }).count
-      : 0,
-    sessions: undefined,
-  }));
-
-  return NextResponse.json(students);
+    return NextResponse.json(students);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (msg.includes('MONGODB_URI')) {
+      return NextResponse.json({ error: 'Database not configured' }, { status: 503 });
+    }
+    console.error('GET /api/students:', msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
 }
 
 export async function POST(req: NextRequest) {
-  const body = await req.json();
-  const { username, display_name } = body as { username: string; display_name?: string };
+  let body: Record<string, unknown>;
+  try {
+    body = await readJsonObject(req);
+  } catch (e) {
+    const code = e instanceof Error ? e.message : '';
+    if (code === 'EMPTY_BODY') {
+      return NextResponse.json({ error: 'Request body is required' }, { status: 400 });
+    }
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
 
-  if (!username) {
+  const usernameRaw = body.username;
+  if (typeof usernameRaw !== 'string' || !usernameRaw.trim()) {
     return NextResponse.json({ error: 'username is required' }, { status: 400 });
   }
 
-  // Try to find existing student
-  const { data: existing } = await supabase
-    .from('students')
-    .select('*')
-    .eq('username', username.toLowerCase())
-    .single();
+  const username = usernameRaw.trim().toLowerCase();
+  const display_name =
+    typeof body.display_name === 'string' && body.display_name.trim()
+      ? body.display_name.trim()
+      : usernameRaw.trim();
 
-  if (existing) {
-    // Update last_active_at and return
-    await supabase
-      .from('students')
-      .update({ last_active_at: new Date().toISOString() })
-      .eq('id', existing.id);
-    return NextResponse.json({ ...existing, last_active_at: new Date().toISOString() });
+  try {
+    const db = await getDb();
+    const coll = db.collection('students');
+    const now = new Date();
+
+    const existing = await coll.findOne({ username });
+    if (existing) {
+      await coll.updateOne({ _id: existing._id }, { $set: { last_active_at: now } });
+      const updated = await coll.findOne({ _id: existing._id });
+      return NextResponse.json(toStudentApi(updated!));
+    }
+
+    const inserted = await coll.insertOne({
+      username,
+      display_name,
+      ...studentDefaults(),
+    });
+    const created = await coll.findOne({ _id: inserted.insertedId });
+    return NextResponse.json(toStudentApi(created!), { status: 201 });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (msg.includes('MONGODB_URI')) {
+      return NextResponse.json({ error: 'Database not configured' }, { status: 503 });
+    }
+    console.error('POST /api/students:', msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
   }
-
-  // Create new student
-  const { data: created, error } = await supabase
-    .from('students')
-    .insert({
-      username: username.toLowerCase(),
-      display_name: display_name || username,
-    })
-    .select()
-    .single();
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(created, { status: 201 });
 }

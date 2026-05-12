@@ -122,7 +122,7 @@ export default function TechPage() {
         setAvatarState('idle');
         const isQuota = err instanceof Error && err.message === 'QUOTA';
         const errorMsg = isQuota
-          ? '⚠️ OpenAI quota exceeded. Please add credits at platform.openai.com/billing and try again.'
+          ? '⚠️ AI quota or rate limit reached. Check your Groq console (console.groq.com) or try again later.'
           : "Hi! I'm having trouble starting — tap the mic when you're ready.";
         setMessages([{ role: 'assistant', content: errorMsg }]);
       } finally {
@@ -224,7 +224,7 @@ export default function TechPage() {
         setAvatarState('idle');
         const isQuota = err instanceof Error && err.message === 'QUOTA';
         const errorMsg = isQuota
-          ? "⚠️ OpenAI quota exceeded. Please add credits at platform.openai.com/billing and try again."
+          ? "⚠️ AI quota or rate limit reached. Check your Groq console (console.groq.com) or try again later."
           : "Oops, something went wrong. Let's try again!";
         setMessages((prev) => [...prev, { role: 'assistant', content: errorMsg }]);
       } finally {

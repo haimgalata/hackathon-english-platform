@@ -20,6 +20,7 @@
 
 ## Overview
 
+
 **SpeakTech** is a full-stack MVP where learners practice **spoken English** in realistic tech scenarios. They meet **TECHY** — an AI tutor that speaks in character, gives structured **feedback** (corrections, suggestions, score), and adapts to **interview**, **friends**, and **workplace** modes.
 
 The stack is intentionally modern and deployable: **Next.js App Router** for UI and **Route Handlers** for API, **MongoDB Atlas** for durable profiles and chat logs, **Groq** for fast JSON-mode chat, and the **Web Speech API** for zero-latency voice playback in the browser (with optional **OpenAI TTS** on the server for integrations that call `/api/tts`).
@@ -31,19 +32,25 @@ The stack is intentionally modern and deployable: **Next.js App Router** for UI 
 > **Add your assets here** — replace the placeholders below with real screenshots or a short GIF to make the repo pop on GitHub.
 
 <!-- SCREENSHOT: Student login / landing — suggested path: docs/images/login.png -->
-<p align="center"><strong>Login &amp; student onboarding</strong><br /><code>docs/images/login.png</code> (add file)</p>
+<p align="center">
+  <img src="docs/images/login.png" width="85%" alt="Login" />
+</p>
 
-<!-- SCREENSHOT: Dashboard with progress — docs/images/dashboard.png -->
-<p align="center"><strong>Learner dashboard</strong><br /><code>docs/images/dashboard.png</code></p>
+<p align="center">
+  <img src="docs/images/dashboard.png" width="85%" alt="Dashboard" />
+</p>
 
-<!-- GIF or screenshot: TECHY chat + voice — docs/images/techy-chat.gif -->
-<p align="center"><strong>TECHY — AI tutor (voice + text)</strong><br /><code>docs/images/techy-chat.gif</code></p>
+<p align="center">
+  <img src="docs/images/techy-chat.png" width="85%" alt="TECHY Chat" />
+</p>
 
-<!-- SCREENSHOT: Phaser practice or /game — docs/images/practice.png -->
-<p align="center"><strong>Tech vocabulary practice (Phaser)</strong><br /><code>docs/images/practice.png</code></p>
+<p align="center">
+  <img src="docs/images/practice.png" width="85%" alt="Practice Game" />
+</p>
 
-<!-- SCREENSHOT: Teacher roster — docs/images/teacher.png -->
-<p align="center"><strong>Teacher dashboard</strong><br /><code>docs/images/teacher.png</code></p>
+<p align="center">
+  <img src="docs/images/teacher.png" width="85%" alt="Teacher Dashboard" />
+</p>
 
 ---
 

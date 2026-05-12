@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <a href="https://your-site-url.com">
+  <a href="https://github.com/haimgalata/hackathon-english-platform">
     <img src="https://img.shields.io/badge/🚀_Live_Demo-Try_SpeakTech-2563EB?style=for-the-badge" alt="Live Demo" />
   </a>
 </p>

@@ -33,23 +33,23 @@ The stack is intentionally modern and deployable: **Next.js App Router** for UI 
 
 <!-- SCREENSHOT: Student login / landing — suggested path: docs/images/login.png -->
 <p align="center">
-  <img src="docs/images/login.png" width="85%" alt="Login" />
+  <img src="docs/images/login.png" width="50%" alt="Login" />
 </p>
 
 <p align="center">
-  <img src="docs/images/dashboard.png" width="85%" alt="Dashboard" />
+  <img src="docs/images/dashboard.png" width="50%" alt="Dashboard" />
 </p>
 
 <p align="center">
-  <img src="docs/images/techy-chat.png" width="85%" alt="TECHY Chat" />
+  <img src="docs/images/techy-chat.png" width="50%" alt="TECHY Chat" />
 </p>
 
 <p align="center">
-  <img src="docs/images/practice.png" width="85%" alt="Practice Game" />
+  <img src="docs/images/practice.png" width="50%" alt="Practice Game" />
 </p>
 
 <p align="center">
-  <img src="docs/images/teacher.png" width="85%" alt="Teacher Dashboard" />
+  <img src="docs/images/teacher.png" width="50%" alt="Teacher Dashboard" />
 </p>
 
 ---
